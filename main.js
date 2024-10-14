@@ -1,25 +1,31 @@
-// Defining text characters for the empty and full hearts for you to use later.
-const EMPTY_HEART = '♡'
-const FULL_HEART = '♥'
 
-// Your JavaScript code goes here!
+const EMPTY_HEART = '♡';
+const FULL_HEART = '♥';
 
 
+function toggleHeart(heartElement) {
+  const currentStatus = heartElement.dataset.heartStatus;
 
+ 
+  if (currentStatus === 'empty') {
+    mimicServerCall()
+      .then(response => {
+        console.log(response); 
+        heartElement.textContent = FULL_HEART; 
+        heartElement.dataset.heartStatus = 'full'; 
+      })
+      .catch(error => {
+        alert(error); 
+      });
+  } else {
 
-//------------------------------------------------------------------------------
-// Don't change the code below: this function mocks the server response
-//------------------------------------------------------------------------------
-
-function mimicServerCall(url="http://mimicServer.example.com", config={}) {
-  return new Promise(function(resolve, reject) {
-    setTimeout(function() {
-      let isRandomFailure = Math.random() < .2
-      if (isRandomFailure) {
-        reject("Random server error. Try again.");
-      } else {
-        resolve("Pretend remote server notified of action!");
-      }
-    }, 300);
-  });
+    heartElement.textContent = EMPTY_HEART; 
+    heartElement.dataset.heartStatus = 'empty'; 
+  }
 }
+
+
+const hearts = document.querySelectorAll('.heart');
+hearts.forEach(heart => {
+  heart.addEventListener('click', () => toggleHeart(heart));
+});
